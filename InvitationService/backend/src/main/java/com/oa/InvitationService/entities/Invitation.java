@@ -23,7 +23,7 @@ public class Invitation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Please provide a valid email address")
@@ -47,6 +47,5 @@ public class Invitation {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @NotBlank(message = "Invitation link cannot be empty")
     private String invitationLink;
 }
