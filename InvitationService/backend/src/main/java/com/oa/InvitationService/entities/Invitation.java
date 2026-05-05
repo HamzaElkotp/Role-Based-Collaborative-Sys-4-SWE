@@ -47,5 +47,7 @@ public class Invitation {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    private LocalDateTime resentAt;
+
     private String invitationLink;
 }

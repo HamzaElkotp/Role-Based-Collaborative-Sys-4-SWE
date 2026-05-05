@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -37,7 +39,22 @@ public class InvitationController {
 
     @PostMapping("/invitations/send")
     public Invitation sendInvitation(@Valid @RequestBody Invitation invitation) {
-        return invitationService.save(invitation);
+        return invitationService.send(invitation);
+    }
+
+    @PutMapping("/invitations/{id}/resend")
+    public Invitation resendInvitation(@PathVariable Long id) {
+        return invitationService.resend(id);
+    }
+
+    @PutMapping("/invitations/{id}/cancel")
+    public Invitation cancelInvitation(@PathVariable Long id) {
+        return invitationService.cancel(id);
+    }
+
+    @PutMapping("/invitations/{id}/accept")
+    public Invitation acceptInvitation(@PathVariable Long id) {
+        return invitationService.accept(id);
     }
     
 }
