@@ -38,6 +38,12 @@ public class InvitationController {
         return invitationService.getInvById(id);
     }
 
+    @GetMapping("/invitations/project/{projectId}")
+    public List<Invitation> getMethodName(@PathVariable Long projectId) {
+        return invitationService.getInvitationsByProjectId(projectId);
+    }
+    
+
     @GetMapping("/invitations")
     public List<Invitation> getMethodName(@RequestParam String email) {
         return invitationService.getUserInvitations(email);

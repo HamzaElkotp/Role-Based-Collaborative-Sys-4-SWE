@@ -10,4 +10,6 @@ import com.oa.InvitationService.entities.Invitation;
 @Repository
 public interface InvitationRepo extends JpaRepository<Invitation, Long> {
     List<Invitation> findByEmail(String email);
+
+    List<Invitation> findByProjectId(Long projectId);
 }

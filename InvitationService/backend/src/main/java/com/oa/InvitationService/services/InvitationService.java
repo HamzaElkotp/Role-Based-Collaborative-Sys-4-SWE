@@ -31,6 +31,10 @@ public class InvitationService {
         return invitationRepo.findByEmail(userEmail);
     }
 
+    public List<Invitation> getInvitationsByProjectId(Long id) {
+        return invitationRepo.findByProjectId(id);
+    }
+
     @Transactional
     public Invitation send(Invitation invitation) {
         Invitation savedInv = invitationRepo.save(invitation);
