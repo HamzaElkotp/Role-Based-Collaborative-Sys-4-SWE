@@ -32,11 +32,11 @@ public class Invitation {
 
     @NotNull(message = "Invitee Role ID is required")
     @Column(nullable = false)
-    private Integer inviteeRoleId;
+    private Long inviteeRoleId;
 
     @NotNull(message = "Project ID is required")
     @Column(nullable = false)
-    private Integer projectId;
+    private Long projectId;
 
     @NotBlank(message = "Status is required")
     @Pattern(regexp = "PENDING|ACCEPTED|CANCELED|EXPIRED", 
