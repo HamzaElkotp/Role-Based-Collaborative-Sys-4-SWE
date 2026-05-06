@@ -27,6 +27,10 @@ public class InvitationService {
         return invitationRepo.findById(id);
     }
 
+    public List<Invitation> getUserInvitations(String userEmail) {
+        return invitationRepo.findByEmail(userEmail);
+    }
+
     @Transactional
     public Invitation send(Invitation invitation) {
         Invitation savedInv = invitationRepo.save(invitation);

@@ -7,6 +7,7 @@ import com.oa.InvitationService.services.InvitationService;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,12 @@ public class InvitationController {
     public Optional<Invitation> getInvById(@PathVariable Long id) {
         return invitationService.getInvById(id);
     }
+
+    @GetMapping("/invitations")
+    public List<Invitation> getMethodName(@RequestParam String email) {
+        return invitationService.getUserInvitations(email);
+    }
+    
 
     @PostMapping("/invitations/send")
     public Invitation sendInvitation(@Valid @RequestBody Invitation invitation) {
