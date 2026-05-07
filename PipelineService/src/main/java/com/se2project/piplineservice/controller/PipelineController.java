@@ -1,79 +1,169 @@
-package com.se2project.piplineservice.controller;
+package com.se2project.piplineservice.Service;
 
-import com.se2project.piplineservice.Piplinedto.UpdateDTO;
-import com.se2project.piplineservice.Service.PipelineService;
+import com.se2project.piplineservice.Repository.*;
+
 import com.se2project.piplineservice.entity.Update;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.se2project.piplineservice.exception.BadRequestException;
+import com.se2project.piplineservice.model.State;
+import com.se2project.piplineservice.model.TransitionLog;
 
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
-@RestController
-public class PipelineController {
+@Service
+public class PipelineService {
 
-    private final PipelineService service;
+    private final UpdateRepository updateRepo;
+    private final TransitionLogRepository logRepo;
 
-    public PipelineController(PipelineService service) {
-        this.service = service;
-    }
-    //DI
-    @Autowired
-    PipelineService piplineService;
-
-    //@GetMapping("/getUpdate/{id}")
-    //public ResponseEntity<UpdateDTO> getUpdate(@PathVariable Integer id){
-    //    final UpdateDTO update = piplineService.getUpdate(id);
-    //    return ResponseEntity.ok(update);
-    //}
-
-    /////////   Update Management ///////////
-    //Method:POST	Endpoint:/update => Create a new update
-    @PostMapping("/update")
-    public Update create(@RequestBody Update req) {
-        return service.create(req.getTitle(), req.getCreatedBy());
-    }
-    // Method: GET  Endpoint: /update/{id} => Get update by ID
-    @GetMapping("/update/{id}")
-    public Update get(@PathVariable Long id) {
-        return service.get(id);
+    public PipelineService(
+            UpdateRepository updateRepo,
+            TransitionLogRepository logRepo
+    ) {
+        this.updateRepo = updateRepo;
+        this.logRepo = logRepo;
     }
 
-    // Method: GET  Endpoint: /updates => Get all updates
-    @GetMapping("/updates")
+
+    // create Update and make it in modifying state initially
+    public Update create(String title, String user) {
+
+        Update u = new Update();
+
+        u.setTitle(title);
+        u.setCreatedBy(user);
+        u.setCurrentState(State.MODIFYING);
+        u.setTestsPassed(false);
+
+        u.setCreatedAt(LocalDateTime.now());
+        u.setUpdatedAt(LocalDateTime.now());
+
+        return updateRepo.save(u);
+    }
+
+    // get update by id
+    public Update get(Long id) {
+
+        return updateRepo.findById(id)
+                .orElseThrow(() ->
+                        new BadRequestException("Update not found"));
+    }
+
+    // move to testing
+    public Update moveToTesting(Long id) {
+
+        Update u = get(id);
+
+        if (u.getCurrentState() != State.MODIFYING) {
+            throw new BadRequestException("Invalid transition");
+        }
+
+        log(u, State.TESTING);
+
+        u.setCurrentState(State.TESTING);
+        u.setUpdatedAt(LocalDateTime.now());
+
+        return updateRepo.save(u);
+    }
+
+    // move to review after tests passed
+    public Update moveToReview(Long id) {
+
+        Update u = get(id);
+
+        if (u.getCurrentState() != State.TESTING || !u.isTestsPassed()) {
+            throw new BadRequestException("Tests must pass first");
+        }
+
+        log(u, State.REVIEW);
+
+        u.setCurrentState(State.REVIEW);
+        u.setUpdatedAt(LocalDateTime.now());
+
+        return updateRepo.save(u);
+    }
+
+    // return to modifying
+    public Update moveToModifying(Long id) {
+
+        Update u = get(id);
+
+        if (u.getCurrentState() != State.TESTING
+                && u.getCurrentState() != State.REVIEW) {
+
+            throw new BadRequestException("Invalid transition");
+        }
+
+        log(u, State.MODIFYING);
+
+        u.setCurrentState(State.MODIFYING);
+        u.setTestsPassed(false);
+
+        u.setUpdatedAt(LocalDateTime.now());
+
+        return updateRepo.save(u);
+    }
+
+    // merge update
+    public Update merge(Long id) {
+
+        Update u = get(id);
+
+        if (u.getCurrentState() != State.REVIEW) {
+            throw new BadRequestException("Only review can merge");
+        }
+
+        log(u, State.MERGED);
+
+        u.setCurrentState(State.MERGED);
+        u.setUpdatedAt(LocalDateTime.now());
+
+        return updateRepo.save(u);
+    }
+
+    // reject update
+    public Update reject(Long id) {
+
+        Update u = get(id);
+
+        if (u.getCurrentState() != State.REVIEW
+                && u.getCurrentState() != State.TESTING) {
+
+            throw new BadRequestException("Invalid transition");
+        }
+
+        log(u, State.REJECTED);
+
+        u.setCurrentState(State.REJECTED);
+        u.setUpdatedAt(LocalDateTime.now());
+
+        return updateRepo.save(u);
+    }
+
+    public Update setTestResult(Long id, boolean passed) {
+
+        Update u = get(id);
+
+        u.setTestsPassed(passed);
+        u.setUpdatedAt(LocalDateTime.now());
+
+        return updateRepo.save(u);
+    }
+
+    private void log(Update u, State toState) {
+
+        TransitionLog log = new TransitionLog();
+
+        log.setUpdateId(u.getId());
+        log.setFromState(u.getCurrentState());
+        log.setToState(toState);
+        log.setTimestamp(LocalDateTime.now());
+
+        logRepo.save(log);
+    }
     public List<Update> getAll() {
-        return service.getAll();
-    }
-    /////////   State Transitions  ///////////
-    // Method: POST  Endpoint: /updates/{id}/move-to-testing  => Move to Testing
-    @PostMapping("/{id}/testing")
-    public Update moveToTesting(@PathVariable Long id) {
-        return service.moveToTesting(id);
-    }
-    // Method: POST  Endpoint: /updates/{id}/move-to-review  => Move to Review
-    @PostMapping("/{id}/review")
-    public Update moveToReview(@PathVariable Long id) {
-        return service.moveToReview(id);
-    }
-    // Method: POST  Endpoint: /updates/{id}/move-to-modifying  => Move back to Modifying
-    @PostMapping("/{id}/modifying")
-    public Update moveToModifying(@PathVariable Long id) {
-        return service.moveToModifying(id);
-    }
-    /////////   Final Actions  ///////////
-    // Method: POST  Endpoint: /updates/{id}/merge  => Merge the update
-    @PostMapping("/{id}/merge")
-    public Update merge(@PathVariable Long id) {
-        return service.merge(id);
-    }
-    // Method: POST  Endpoint: /updates/{id}/reject  => Reject the update
-    @PostMapping("/{id}/reject")
-    public Update reject(@PathVariable Long id) {
-        return service.reject(id);
-    }
-    // Method: POST  Endpoint: /updates/{id}/revert  => Revert the update
-    @PostMapping("/{id}/test-result")
-    public Update setTest(@PathVariable Long id, @RequestParam boolean passed) {
-        return service.setTestResult(id, passed);
-    }
+    return updateRepo.findAll();
+}
 }
