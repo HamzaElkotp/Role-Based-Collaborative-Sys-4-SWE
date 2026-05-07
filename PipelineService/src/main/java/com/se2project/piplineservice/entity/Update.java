@@ -1,38 +1,85 @@
 package com.se2project.piplineservice.entity;
 
-import com.se2project.piplineservice.Piplinedto.UpdateDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.se2project.piplineservice.model.State;
+import jakarta.persistence.*;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
-public class Update extends UpdateDTO {
+public class Update {
+
     @Id
-    int updateId;
-    String name;
-    String description;
-    String creator;
-    Date uploadeDateToUpdate;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    private String title;
 
-    public Update(String hh, String hhhhh, String heidi, LocalDate localDate) {
+    private String createdBy;
+
+    @Enumerated(EnumType.STRING)
+    private State currentState;
+
+    private boolean testsPassed;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    // ===== Getters & Setters =====
+
+    public Long getId() {
+        return id;
     }
 
-    public Update( ) {
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Update(int updateId, String name, String description, String creator, Date uploadeDateToUpdate) {
-        this.updateId = updateId;
-        this.name = name;
-        this.description = description;
-        this.creator = creator;
-        this.uploadeDateToUpdate = uploadeDateToUpdate;
+    public String getTitle() {
+        return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public void getName() {
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+    }
+
+    public boolean isTestsPassed() {
+        return testsPassed;
+    }
+
+    public void setTestsPassed(boolean testsPassed) {
+        this.testsPassed = testsPassed;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
