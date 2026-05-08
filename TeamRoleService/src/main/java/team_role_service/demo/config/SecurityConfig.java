@@ -17,11 +17,12 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/roles/**").authenticated()
-                        .requestMatchers("/projects/**").authenticated()
+//                        .requestMatchers("/roles/**").authenticated()
+//                        .requestMatchers("/projects/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .httpBasic(Customizer.withDefaults())
+//                .httpBasic(Customizer.withDefaults()
+//                )
                 ;
 
         return http.build();
