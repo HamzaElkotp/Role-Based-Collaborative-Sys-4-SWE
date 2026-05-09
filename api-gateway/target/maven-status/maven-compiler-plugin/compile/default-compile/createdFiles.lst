@@ -1,0 +1,6 @@
+com\example\apigateway\security\SecurityConfig.class
+com\example\apigateway\ApiGatewayApplication.class
+com\example\apigateway\dto\TokenIntrospectionResponse.class
+com\example\apigateway\config\WebClientConfig.class
+com\example\apigateway\security\AuthGatewayFilter.class
+com\example\apigateway\client\AuthServiceClient.class

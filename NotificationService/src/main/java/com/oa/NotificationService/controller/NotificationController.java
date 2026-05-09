@@ -2,13 +2,17 @@ package com.oa.NotificationService.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.oa.NotificationService.dto.NotificationDto;
 import com.oa.NotificationService.entities.Notification;
 import com.oa.NotificationService.services.NotificationService;
+import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,5 +38,10 @@ public class NotificationController {
             @PathVariable Long roleId) {
         
         return ResponseEntity.ok(notificationService.getNotificationsByProjectAndRole(projectId, roleId));
+    }
+
+    @PostMapping("/internal/notifications")
+    public ResponseEntity<Notification> createInternalNotification(@Valid @RequestBody NotificationDto dto) {
+        return ResponseEntity.ok(notificationService.createNotification(dto));
     }
 }

@@ -1,0 +1,179 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: swe-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init-multiple-dbs.sql:/docker-entrypoint-initdb.d/init-multiple-dbs.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: swe-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  redis:
+    image: redis:7-alpine
+    container_name: swe-redis
+    ports:
+      - "6379:6379"
+
+  service-registry:
+    build: ./service-registry
+    container_name: swe-service-registry
+    ports:
+      - "8761:8761"
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: swe-api-gateway
+    depends_on:
+      - service-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+    ports:
+      - "8080:8080"
+
+  auth-service:
+    build: ./AuthService
+    container_name: swe-auth-service
+    depends_on:
+      - postgres
+      - service-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  invitation-service:
+    build: ./InvitationService
+    container_name: swe-invitation-service
+    depends_on:
+      - postgres
+      - service-registry
+      - notification-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/invitation_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      APP_INVITATION_PUBLIC_BASE_URL: http://localhost:8080/api/invitations/
+
+  notification-service:
+    build: ./NotificationService
+    container_name: swe-notification-service
+    depends_on:
+      - postgres
+      - service-registry
+      - rabbitmq
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/notification_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+  pipeline-service:
+    build: ./PipelineService
+    container_name: swe-pipeline-service
+    depends_on:
+      - postgres
+      - service-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pipeline_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  project-service:
+    build: ./ProjectService
+    container_name: swe-project-service
+    depends_on:
+      - postgres
+      - service-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/project_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  reviewing-phase-service:
+    build: ./ReviewingPhaseService
+    container_name: swe-reviewing-phase-service
+    depends_on:
+      - postgres
+      - service-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/reviewing_phase_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  modifying-phase-service:
+    build: ./ModifyingPhaseService
+    container_name: swe-modifying-phase-service
+    depends_on:
+      - postgres
+      - service-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/modifying_phase_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  task-service:
+    build: ./TaskService
+    container_name: swe-task-service
+    depends_on:
+      - postgres
+      - service-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/task_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  team-role-service:
+    build: ./TeamRoleService
+    container_name: swe-team-role-service
+    depends_on:
+      - postgres
+      - service-registry
+      - redis
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/team_role_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+
+  testing-phase-service:
+    build: ./TestingPhaseService
+    container_name: swe-testing-phase-service
+    depends_on:
+      - postgres
+      - service-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/testing_phase_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+volumes:
+  postgres_data:

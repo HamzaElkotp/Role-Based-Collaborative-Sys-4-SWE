@@ -1,0 +1,10 @@
+CREATE DATABASE auth_service_db;
+CREATE DATABASE invitation_service_db;
+CREATE DATABASE modifying_phase_service_db;
+CREATE DATABASE notification_service_db;
+CREATE DATABASE pipeline_service_db;
+CREATE DATABASE project_service_db;
+CREATE DATABASE reviewing_phase_service_db;
+CREATE DATABASE task_service_db;
+CREATE DATABASE team_role_service_db;
+CREATE DATABASE testing_phase_service_db;

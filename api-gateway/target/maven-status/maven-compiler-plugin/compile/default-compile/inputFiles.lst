@@ -1,0 +1,6 @@
+D:\SelfAcademicLearn\University\Year 3\Semister 2\SWE2\Project\Code\swe\api-gateway\src\main\java\com\example\apigateway\ApiGatewayApplication.java
+D:\SelfAcademicLearn\University\Year 3\Semister 2\SWE2\Project\Code\swe\api-gateway\src\main\java\com\example\apigateway\client\AuthServiceClient.java
+D:\SelfAcademicLearn\University\Year 3\Semister 2\SWE2\Project\Code\swe\api-gateway\src\main\java\com\example\apigateway\config\WebClientConfig.java
+D:\SelfAcademicLearn\University\Year 3\Semister 2\SWE2\Project\Code\swe\api-gateway\src\main\java\com\example\apigateway\dto\TokenIntrospectionResponse.java
+D:\SelfAcademicLearn\University\Year 3\Semister 2\SWE2\Project\Code\swe\api-gateway\src\main\java\com\example\apigateway\security\AuthGatewayFilter.java
+D:\SelfAcademicLearn\University\Year 3\Semister 2\SWE2\Project\Code\swe\api-gateway\src\main\java\com\example\apigateway\security\SecurityConfig.java

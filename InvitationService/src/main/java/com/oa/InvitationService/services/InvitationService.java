@@ -1,23 +1,32 @@
 package com.oa.InvitationService.services;
 
+import com.oa.InvitationService.client.NotificationServiceClient;
+import com.oa.InvitationService.dto.InternalNotificationRequest;
+import com.oa.InvitationService.entities.Invitation;
+import com.oa.InvitationService.repos.InvitationRepo;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.oa.InvitationService.entities.Invitation;
-import com.oa.InvitationService.repos.InvitationRepo;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-
 @Service
 public class InvitationService {
-    private static final String INV_BASE_ROUTE = "http://localhost:8080/invitations/";
-    @Autowired
-    private InvitationRepo invitationRepo;
+    private final InvitationRepo invitationRepo;
+    private final NotificationServiceClient notificationServiceClient;
+    private final String invitationBaseRoute;
+
+    public InvitationService(
+            InvitationRepo invitationRepo,
+            NotificationServiceClient notificationServiceClient,
+            @Value("${app.invitation.public-base-url}") String invitationBaseRoute) {
+        this.invitationRepo = invitationRepo;
+        this.notificationServiceClient = notificationServiceClient;
+        this.invitationBaseRoute = invitationBaseRoute;
+    }
 
     public List<Invitation> getAll() {
         return invitationRepo.findAll();
@@ -39,11 +48,16 @@ public class InvitationService {
     public Invitation send(Invitation invitation) {
         Invitation savedInv = invitationRepo.save(invitation);
 
-        String newInvLink = INV_BASE_ROUTE + savedInv.getId();
+        String newInvLink = invitationBaseRoute + savedInv.getId();
 
         savedInv.setInvitationLink(newInvLink);
 
-        // TODO - send an email/notification with the invitation details
+        notificationServiceClient.createInternalNotification(new InternalNotificationRequest(
+                savedInv.getProjectId(),
+                savedInv.getInviteeRoleId(),
+                "New Project Invitation",
+                "Invitation sent to " + savedInv.getEmail()
+        ));
 
         return invitationRepo.save(savedInv);
 

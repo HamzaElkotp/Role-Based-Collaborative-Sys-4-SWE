@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.oa.NotificationService.dto.NotificationDto;
 import com.oa.NotificationService.entities.Notification;
 import com.oa.NotificationService.repos.NotificationRepo;
 
@@ -25,5 +26,15 @@ public class NotificationService {
      */
     public List<Notification> getAllNotifications() {
         return notificationRepo.findAll();
+    }
+
+    public Notification createNotification(NotificationDto dto) {
+        Notification notification = new Notification();
+        notification.setType(dto.getType() == null ? 1L : dto.getType());
+        notification.setRoleId(dto.getRoleId());
+        notification.setProjectId(dto.getProjectId());
+        notification.setTitle(dto.getTitle());
+        notification.setMessage(dto.getMessage());
+        return notificationRepo.save(notification);
     }
 }
