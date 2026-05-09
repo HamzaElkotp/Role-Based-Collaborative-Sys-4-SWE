@@ -7,10 +7,17 @@
         <option value="$PROJECT_DIR$/TaskService/pom.xml" />
         <option value="$PROJECT_DIR$/TeamRoleService/pom.xml" />
         <option value="$PROJECT_DIR$/TestingPhaseService/pom.xml" />
+        <option value="$PROJECT_DIR$/ModifyingPhaseService/pom.xml" />
+        <option value="$PROJECT_DIR$/InvitationService/pom.xml" />
+        <option value="$PROJECT_DIR$/AuthService/pom.xml" />
+        <option value="$PROJECT_DIR$/ReviewingPhaseService/pom.xml" />
+        <option value="$PROJECT_DIR$/ProjectService/pom.xml" />
+        <option value="$PROJECT_DIR$/NotificationService/pom.xml" />
+        <option value="$PROJECT_DIR$/PipelineService/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="openjdk-26" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" default="true" project-jdk-name="22" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
