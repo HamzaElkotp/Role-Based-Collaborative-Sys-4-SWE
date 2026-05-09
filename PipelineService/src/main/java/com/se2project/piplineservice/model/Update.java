@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class Update {
+public class public class PipelineUpdate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
