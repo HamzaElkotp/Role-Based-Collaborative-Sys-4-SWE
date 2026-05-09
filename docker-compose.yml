@@ -140,37 +140,6 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
 
-  reviewing-phase-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.service
-      args:
-        MODULE: ReviewingPhaseService
-    container_name: swe-reviewing-phase-service
-    depends_on:
-      - postgres
-      - service-registry
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/reviewing_phase_service_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-
-  modifying-phase-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.service
-      args:
-        MODULE: ModifyingPhaseService
-    container_name: swe-modifying-phase-service
-    depends_on:
-      - postgres
-      - service-registry
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/modifying_phase_service_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
 
   task-service:
     build:
@@ -206,22 +175,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
-
-  testing-phase-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.service
-      args:
-        MODULE: TestingPhaseService
-    container_name: swe-testing-phase-service
-    depends_on:
-      - postgres
-      - service-registry
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/testing_phase_service_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
 
 volumes:
   postgres_data:
