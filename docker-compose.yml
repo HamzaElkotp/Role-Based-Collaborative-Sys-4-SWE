@@ -30,13 +30,21 @@ services:
       - "6379:6379"
 
   service-registry:
-    build: ./service-registry
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: service-registry
     container_name: swe-service-registry
     ports:
       - "8761:8761"
 
   api-gateway:
-    build: ./api-gateway
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: api-gateway
     container_name: swe-api-gateway
     depends_on:
       - service-registry
@@ -46,7 +54,11 @@ services:
       - "8080:8080"
 
   auth-service:
-    build: ./AuthService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: AuthService
     container_name: swe-auth-service
     depends_on:
       - postgres
@@ -58,7 +70,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
 
   invitation-service:
-    build: ./InvitationService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: InvitationService
     container_name: swe-invitation-service
     depends_on:
       - postgres
@@ -72,7 +88,11 @@ services:
       APP_INVITATION_PUBLIC_BASE_URL: http://localhost:8080/api/invitations/
 
   notification-service:
-    build: ./NotificationService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: NotificationService
     container_name: swe-notification-service
     depends_on:
       - postgres
@@ -89,7 +109,11 @@ services:
       SPRING_RABBITMQ_PASSWORD: guest
 
   pipeline-service:
-    build: ./PipelineService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: PipelineService
     container_name: swe-pipeline-service
     depends_on:
       - postgres
@@ -101,7 +125,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
 
   project-service:
-    build: ./ProjectService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: ProjectService
     container_name: swe-project-service
     depends_on:
       - postgres
@@ -113,7 +141,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
 
   reviewing-phase-service:
-    build: ./ReviewingPhaseService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: ReviewingPhaseService
     container_name: swe-reviewing-phase-service
     depends_on:
       - postgres
@@ -125,7 +157,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
 
   modifying-phase-service:
-    build: ./ModifyingPhaseService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: ModifyingPhaseService
     container_name: swe-modifying-phase-service
     depends_on:
       - postgres
@@ -137,7 +173,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
 
   task-service:
-    build: ./TaskService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: TaskService
     container_name: swe-task-service
     depends_on:
       - postgres
@@ -149,7 +189,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
 
   team-role-service:
-    build: ./TeamRoleService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: TeamRoleService
     container_name: swe-team-role-service
     depends_on:
       - postgres
@@ -164,7 +208,11 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
 
   testing-phase-service:
-    build: ./TestingPhaseService
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args:
+        MODULE: TestingPhaseService
     container_name: swe-testing-phase-service
     depends_on:
       - postgres
