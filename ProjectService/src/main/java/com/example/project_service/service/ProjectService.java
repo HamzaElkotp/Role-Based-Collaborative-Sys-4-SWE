@@ -5,7 +5,7 @@ import com.example.project_service.dto.ProjectResponse;
 import java.util.List;
 
 public interface ProjectService {
-    ProjectResponse createProject(ProjectRequest request);
+    ProjectResponse createProject(ProjectRequest request, String authenticatedUserId);
     ProjectResponse getProjectById(Long id);
     List<ProjectResponse> getAllProjects();
     List<ProjectResponse> getProjectsByOwner(Long ownerId);

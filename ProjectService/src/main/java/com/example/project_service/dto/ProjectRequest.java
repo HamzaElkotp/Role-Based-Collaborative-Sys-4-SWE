@@ -13,7 +13,4 @@ public class ProjectRequest {
     private String title;
 
     private String description;
-
-    @NotNull(message = "Owner ID is required")
-    private Long ownerId;
 }

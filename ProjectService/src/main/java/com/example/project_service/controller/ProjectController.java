@@ -19,9 +19,12 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectResponse> createProject(
-            @Valid @RequestBody ProjectRequest request) {
+            @Valid @RequestBody ProjectRequest request,
+            @RequestHeader("X-User-Id") String userId) { // <--- ADD THIS
+        
+        // Pass the userId into your service method
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(projectService.createProject(request));
+                .body(projectService.createProject(request, userId));
     }
 
     @GetMapping

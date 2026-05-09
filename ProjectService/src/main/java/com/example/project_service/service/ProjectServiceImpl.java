@@ -18,17 +18,17 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    @Override
-    public ProjectResponse createProject(ProjectRequest request) {
-        Project project = Project.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .ownerId(request.getOwnerId())
-                .build();
+@Override
+public ProjectResponse createProject(ProjectRequest request, String authenticatedUserId) {
+    Project project = Project.builder()
+            .title(request.getTitle())
+            .description(request.getDescription())
+            .ownerId(Long.valueOf(authenticatedUserId)) // Use the ID from the header!
+            .build();
 
-        Project saved = projectRepository.save(project);
-        return mapToResponse(saved);
-    }
+    Project saved = projectRepository.save(project);
+    return mapToResponse(saved);
+}
 
     @Override
     public ProjectResponse getProjectById(Long id) {
@@ -60,7 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         project.setTitle(request.getTitle());
         project.setDescription(request.getDescription());
-        project.setOwnerId(request.getOwnerId());
+        // project.setOwnerId(request.getOwnerId());
 
         Project updated = projectRepository.save(project);
         return mapToResponse(updated);
