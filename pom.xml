@@ -67,13 +67,10 @@
         <module>api-gateway</module>
         <module>AuthService</module>
         <module>InvitationService</module>
-        <module>ModifyingPhaseService</module>
         <module>NotificationService</module>
         <module>PipelineService</module>
         <module>ProjectService</module>
-        <module>ReviewingPhaseService</module>
         <module>TaskService</module>
         <module>TeamRoleService</module>
-        <module>TestingPhaseService</module>
     </modules>
 </project>
