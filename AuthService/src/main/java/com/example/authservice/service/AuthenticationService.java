@@ -1,13 +1,12 @@
 package com.example.authservice.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.example.authservice.dto.AuthResponse;
 import com.example.authservice.dto.LoginRequest;
 import com.example.authservice.dto.RegisterRequest;
-import com.example.authservice.entity.AccessToken;
 import com.example.authservice.entity.UserAccount;
-import com.example.authservice.repository.AccessTokenRepository;
 import com.example.authservice.repository.UserAccountRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,26 +14,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.Date;
 
 @Service
 public class AuthenticationService {
 
+    private final Algorithm algo = Algorithm.HMAC256("your_secret");
     private final UserAccountRepository userAccountRepository;
-    private final AccessTokenRepository accessTokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final long tokenTtlMinutes;
 
-    public AuthenticationService(
-        UserAccountRepository userAccountRepository,
-        AccessTokenRepository accessTokenRepository,
-        @Value("${auth.token.ttl-minutes:120}") long tokenTtlMinutes) 
-    {
+    public AuthenticationService(UserAccountRepository userAccountRepository) {
         this.userAccountRepository = userAccountRepository;
-        this.accessTokenRepository = accessTokenRepository;
-        this.tokenTtlMinutes = tokenTtlMinutes;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -73,20 +63,12 @@ public class AuthenticationService {
     }
 
     private AuthResponse issueAccessToken(UserAccount user) {
-        AccessToken token = new AccessToken();
-        token.setToken(UUID.randomUUID().toString() + "." + UUID.randomUUID());
-        token.setRevoked(false);
-        token.setUser(user);
-        token.setExpiresAt(LocalDateTime.now().plusMinutes(tokenTtlMinutes));
-
-        AccessToken savedToken = accessTokenRepository.save(token);
-
-        return new AuthResponse(
-                savedToken.getToken(),
-                "Bearer",
-                tokenTtlMinutes * 60,
-                String.valueOf(user.getId()),
-                user.getEmail()
-        );
+        String token = JWT.create()
+            .withSubject(user.getEmail())
+            .withClaim("id", user.getId())
+            .withExpiresAt(new Date(System.currentTimeMillis() + 3600000)) // Expires after 1 hour
+            .sign(algo);
+            
+        return new AuthResponse(token, String.valueOf(user.getId()), user.getEmail());
     }
 }

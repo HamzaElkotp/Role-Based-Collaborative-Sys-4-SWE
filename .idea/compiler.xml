@@ -3,41 +3,33 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for demo" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="demo (1) (team-role-service)" />
-        <module name="demo" />
-      </profile>
-      <profile name="Annotation profile for demo (1) (tasks-service)" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="demo (1) (tasks-service)" />
-      </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="TeamRoleService" />
-        <module name="PipelineService" />
         <module name="TaskService" />
         <module name="ModifyingPhaseService" />
-        <module name="AuthService" />
         <module name="demo (3)" />
         <module name="ReviewingPhaseService" />
+        <module name="TestingPhaseService" />
+      </profile>
+      <profile name="Annotation profile for TeamRoleService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="PipelineService" />
+        <module name="demo (2) (team-role-service)" />
+        <module name="AuthService" />
+        <module name="demo (1) (team-role-service)" />
         <module name="ProjectService" />
         <module name="NotificationService" />
-        <module name="TestingPhaseService" />
+        <module name="demo (1) (tasks-service)" />
         <module name="InvitationService" />
+        <module name="demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -60,6 +52,7 @@
       <module name="demo" options="-parameters" />
       <module name="demo (1) (tasks-service)" options="-parameters" />
       <module name="demo (1) (team-role-service)" options="-parameters" />
+      <module name="demo (2) (team-role-service)" options="-parameters" />
       <module name="demo (3)" options="-parameters" />
     </option>
   </component>
