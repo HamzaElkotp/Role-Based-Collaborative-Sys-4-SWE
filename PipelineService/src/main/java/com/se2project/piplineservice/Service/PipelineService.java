@@ -144,12 +144,10 @@ public class PipelineService {
 
     public Update setTestResult(Long id, boolean passed) {
 
-        Update u = get(id);
+    Update u = get(id);
 
-        u.setTestsPassed(passed);
-        u.setUpdatedAt(LocalDateTime.now());
-
-        return updateRepo.save(u);
+    if (u.getCurrentState() != State.TESTING) {
+        throw new BadRequestException("Can only set test result in TESTING state");
     }
 
     private void log(Update u, State toState) {
