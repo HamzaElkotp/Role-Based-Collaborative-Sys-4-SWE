@@ -1,5 +1,6 @@
 package com.example.project_service.service;
 
+import com.example.project_service.dto.MembershipDTO;
 import com.example.project_service.dto.ProjectRequest;
 import com.example.project_service.dto.ProjectResponse;
 import java.util.List;
@@ -11,4 +12,8 @@ public interface ProjectService {
     List<ProjectResponse> getProjectsByOwner(Long ownerId);
     ProjectResponse updateProject(Long id, ProjectRequest request, String userId);
     void deleteProject(Long id, String userid);
+
+    String getUserRoleInProject(Long projectId, Long userId);
+    MembershipDTO addMember(Long projectId, MembershipDTO membershipDTO, String authUserId);
+    List<MembershipDTO> getProjectMembers(Long projectId);
 }

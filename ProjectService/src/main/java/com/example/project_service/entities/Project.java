@@ -1,4 +1,4 @@
-package com.example.project_service.model;
+package com.example.project_service.entities;
 
 import com.example.project_service.enums.ProjectStatus;
 import jakarta.persistence.*;
@@ -24,7 +24,6 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    // مش FK حقيقي - بس بنحفظ الـ id الجاي من User Service
     @Column(name = "owner_id", nullable = false)
     private Long ownerId;
 

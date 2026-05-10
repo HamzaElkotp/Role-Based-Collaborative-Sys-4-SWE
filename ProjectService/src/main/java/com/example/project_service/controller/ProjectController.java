@@ -1,5 +1,6 @@
 package com.example.project_service.controller;
 
+import com.example.project_service.dto.MembershipDTO;
 import com.example.project_service.dto.ProjectRequest;
 import com.example.project_service.dto.ProjectResponse;
 import com.example.project_service.service.ProjectService;
@@ -20,8 +21,8 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<ProjectResponse> createProject(
             @Valid @RequestBody ProjectRequest request,
-            @RequestHeader("X-User-Id") String userId) { // <--- ADD THIS
-        
+            @RequestHeader("X-User-Id") String userId) {
+
         // Pass the userId into your service method
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(projectService.createProject(request, userId));
@@ -58,5 +59,26 @@ public class ProjectController {
 
         projectService.deleteProject(id, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{project_id}/user/{user_id}/role")
+    public ResponseEntity<String> getUserRole(@PathVariable Long project_id, @PathVariable Long user_id) {
+        String role = projectService.getUserRoleInProject(project_id, user_id);
+        return role != null ? ResponseEntity.ok(role) : ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/{project_id}/add-member")
+    public ResponseEntity<String> addMember(
+            Long project_id,
+            MembershipDTO membershipDTO,
+            @RequestHeader("X-User-Id") String userId) {
+        // SERVICE NEEDS TO BE UPDATED
+        projectService.addMember(project_id, membershipDTO, userId);
+        return ResponseEntity.ok("Member added");
+    }
+
+    @GetMapping("/{project_id}/members")
+    public ResponseEntity<List<MembershipDTO>> getProjectMembers(@PathVariable Long project_id) {
+        return ResponseEntity.ok(projectService.getProjectMembers(project_id));
     }
 }
