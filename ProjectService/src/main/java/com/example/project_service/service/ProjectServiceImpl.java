@@ -8,7 +8,11 @@ import com.example.project_service.exception.ProjectNotFoundException;
 import com.example.project_service.model.Project;
 import com.example.project_service.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,9 +58,13 @@ public ProjectResponse createProject(ProjectRequest request, String authenticate
     }
 
     @Override
-    public ProjectResponse updateProject(Long id, ProjectRequest request) {
+    public ProjectResponse updateProject(Long id, ProjectRequest request, String userId) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
+
+        if (!project.getOwnerId().toString().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the owner!");
+        }
 
         project.setTitle(request.getTitle());
         project.setDescription(request.getDescription());
@@ -67,9 +75,14 @@ public ProjectResponse createProject(ProjectRequest request, String authenticate
     }
 
     @Override
-    public void deleteProject(Long id) {
+    public void deleteProject(Long id, String userId) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
+
+        if (!project.getOwnerId().toString().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the owner!");
+        }
+
         projectRepository.delete(project);
     }
 

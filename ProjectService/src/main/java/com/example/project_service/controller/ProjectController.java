@@ -46,13 +46,17 @@ public class ProjectController {
     @PutMapping("/{id}")
     public ResponseEntity<ProjectResponse> updateProject(
             @PathVariable Long id,
-            @Valid @RequestBody ProjectRequest request) {
-        return ResponseEntity.ok(projectService.updateProject(id, request));
+            @Valid @RequestBody ProjectRequest request,
+            @RequestHeader("X-User-Id") String userId) {
+        return ResponseEntity.ok(projectService.updateProject(id, request, userId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
-        projectService.deleteProject(id);
+    public ResponseEntity<Void> deleteProject(
+            @PathVariable Long id,
+            @RequestHeader("X-User-Id") String userId) { // Grab the ID from header
+
+        projectService.deleteProject(id, userId);
         return ResponseEntity.noContent().build();
     }
 }

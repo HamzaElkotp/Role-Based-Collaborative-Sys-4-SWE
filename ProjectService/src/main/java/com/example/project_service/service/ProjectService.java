@@ -9,6 +9,6 @@ public interface ProjectService {
     ProjectResponse getProjectById(Long id);
     List<ProjectResponse> getAllProjects();
     List<ProjectResponse> getProjectsByOwner(Long ownerId);
-    ProjectResponse updateProject(Long id, ProjectRequest request);
-    void deleteProject(Long id);
+    ProjectResponse updateProject(Long id, ProjectRequest request, String userId);
+    void deleteProject(Long id, String userid);
 }

@@ -11,15 +11,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    // ── Log كل method في الـ service layer ──────────────────────
-
-    @Before("execution(* com.example.projectservice.service.*.*(..))")
+    @Before("execution(* com.example.project_service.service.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
         log.info("➡ Calling: {}", joinPoint.getSignature().getName());
     }
 
     @AfterReturning(
-        pointcut = "execution(* com.example.projectservice.service.*.*(..))",
+        pointcut = "execution(* com.example.project_service.service.*.*(..))",
         returning = "result"
     )
     public void logAfterReturning(JoinPoint joinPoint, Object result) {
@@ -28,7 +26,7 @@ public class LoggingAspect {
     }
 
     @AfterThrowing(
-        pointcut = "execution(* com.example.projectservice.service.*.*(..))",
+        pointcut = "execution(* com.example.project_service.service.*.*(..))",
         throwing = "ex"
     )
     public void logException(JoinPoint joinPoint, Exception ex) {
@@ -36,8 +34,7 @@ public class LoggingAspect {
                 joinPoint.getSignature().getName(), ex.getMessage());
     }
 
-    // ── قياس وقت تنفيذ كل method ────────────────────────────────
-    @Around("execution(* com.example.projectservice.controller.*.*(..))")
+    @Around("execution(* com.example.project_service.controller.*.*(..))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
