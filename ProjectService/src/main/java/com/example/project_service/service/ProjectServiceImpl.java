@@ -145,7 +145,7 @@ public class ProjectServiceImpl implements ProjectService {
         dto.setProject_id(m.getProjectId());
         dto.setUser_id(String.valueOf(m.getUserId()));
         dto.setRole(m.getRole());
-        dto.setJoined_at(m.getJoined_at());
+        dto.setJoinedAt(m.getJoinedAt());
         return dto;
     }
 }

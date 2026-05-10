@@ -1,3 +1,14 @@
+DROP DATABASE IF EXISTS auth_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS invitation_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS modifying_phase_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS notification_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS pipeline_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS project_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS reviewing_phase_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS task_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS team_role_service_db WITH (FORCE);
+DROP DATABASE IF EXISTS testing_phase_service_db WITH (FORCE);
+
 CREATE DATABASE auth_service_db;
 CREATE DATABASE invitation_service_db;
 CREATE DATABASE modifying_phase_service_db;

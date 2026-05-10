@@ -14,5 +14,5 @@ public class MembershipDTO implements Serializable {
     private Long project_id;
     private String user_id;
     private String role;
-    private LocalDateTime joined_at;
+    private LocalDateTime joinedAt;
 }

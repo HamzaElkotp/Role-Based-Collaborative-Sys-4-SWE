@@ -68,13 +68,12 @@ public class ProjectController {
     }
 
     @PostMapping("/{project_id}/add-member")
-    public ResponseEntity<String> addMember(
-            Long project_id,
-            MembershipDTO membershipDTO,
-            @RequestHeader("X-User-Id") String userId) {
-        // SERVICE NEEDS TO BE UPDATED
-        projectService.addMember(project_id, membershipDTO, userId);
-        return ResponseEntity.ok("Member added");
+    public ResponseEntity<MembershipDTO> addMember(       // return the DTO, not String
+          @PathVariable Long project_id,                // ← missing annotation
+          @RequestBody MembershipDTO membershipDTO,      // ← missing annotation
+          @RequestHeader("X-User-Id") String userId) {
+        MembershipDTO result = projectService.addMember(project_id, membershipDTO, userId);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{project_id}/members")
