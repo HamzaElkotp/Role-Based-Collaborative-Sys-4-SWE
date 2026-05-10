@@ -16,3 +16,5 @@ Thumbs.db
 # Env
 .env
 .env.*
+/frontend/node_modules
+/frontend/.next
